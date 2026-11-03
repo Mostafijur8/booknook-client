@@ -1,4 +1,11 @@
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
+const API_URL =
+  typeof window !== "undefined" &&
+  window.location.origin === "https://booknook-tawny.vercel.app"
+    ? "https://booknook-server-dun.vercel.app"
+    : process.env.NEXT_PUBLIC_API_URL ||
+      (process.env.VERCEL
+        ? "https://booknook-server-dun.vercel.app"
+        : "http://localhost:5000");
 
 export async function apiRequest<T>(
   path: string,
