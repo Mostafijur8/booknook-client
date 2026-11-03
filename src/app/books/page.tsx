@@ -3,6 +3,9 @@ import { ArrowRight, Search } from "lucide-react";
 import BookCard from "@/components/home/BookCard";
 import { apiRequest } from "@/lib/api";
 import type { Book } from "@/types/book";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = { title: "BookNook | All Books" };
 
 const categories = ["All", "Fiction", "Science", "History", "Kids", "Others"];
 type BooksResponse = Book[] | { books?: Book[]; data?: Book[] };

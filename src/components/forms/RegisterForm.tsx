@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowRight, ImagePlus, LockKeyhole, Mail, UserRound } from "lucide-react";
+import { ArrowRight, Eye, EyeOff, ImagePlus, LockKeyhole, Mail, UserRound } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import GoogleAuthButton from "@/components/forms/GoogleAuthButton";
 import { authClient } from "@/lib/auth-client";
@@ -14,6 +14,7 @@ export default function RegisterForm() {
   const [email, setEmail] = useState("");
   const [image, setImage] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -80,7 +81,20 @@ export default function RegisterForm() {
           <label htmlFor="password" className="mb-2 block text-sm font-medium">Password</label>
           <div className="flex items-center gap-3 rounded-xl border border-[#deddd3] bg-white px-4 transition focus-within:border-[#718768] focus-within:ring-4 focus-within:ring-[#718768]/10">
             <LockKeyhole className="size-5 shrink-0 text-[#929389]" aria-hidden="true" />
-            <input id="password" name="password" type="password" autoComplete="new-password" minLength={6} value={password} onChange={(event) => setPassword(event.target.value)} placeholder="At least 6 characters" required className="min-w-0 flex-1 bg-transparent py-3 text-sm outline-none placeholder:text-[#a1a197]" />
+            <input id="password" name="password" type={showPassword ? "text" : "password"} autoComplete="new-password" minLength={6} value={password} onChange={(event) => setPassword(event.target.value)} placeholder="At least 6 characters" required className="min-w-0 flex-1 bg-transparent py-3 text-sm outline-none placeholder:text-[#a1a197]" />
+            <button
+              type="button"
+              onClick={() => setShowPassword((visible) => !visible)}
+              aria-label={showPassword ? "Hide password" : "Show password"}
+              aria-pressed={showPassword}
+              className="shrink-0 rounded p-1 text-[#929389] transition hover:text-[#526b4b] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#526b4b]"
+            >
+              {showPassword ? (
+                <EyeOff className="size-5" aria-hidden="true" />
+              ) : (
+                <Eye className="size-5" aria-hidden="true" />
+              )}
+            </button>
           </div>
           <p className="mt-2 text-xs text-[#858579]">Use at least 6 characters, including uppercase and lowercase letters.</p>
         </div>

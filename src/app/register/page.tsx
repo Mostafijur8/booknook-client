@@ -1,6 +1,9 @@
 import Link from "next/link";
 import { BookOpen } from "lucide-react";
 import RegisterForm from "@/components/forms/RegisterForm";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = { title: "BookNook | Register" };
 
 export default function RegisterPage() {
   return (

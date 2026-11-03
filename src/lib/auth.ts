@@ -2,6 +2,7 @@ import { mongodbAdapter } from "@better-auth/mongo-adapter";
 import { APIError, createAuthMiddleware } from "better-auth/api";
 import { betterAuth } from "better-auth";
 import { nextCookies } from "better-auth/next-js";
+import { jwt } from "better-auth/plugins";
 import { MongoClient } from "mongodb";
 
 const mongoUri = process.env.MONGODB_URI;
@@ -79,5 +80,5 @@ export const auth = betterAuth({
     }),
   },
   socialProviders: googleProvider,
-  plugins: [nextCookies()],
+  plugins: [nextCookies(), jwt()],
 });

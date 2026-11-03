@@ -1,7 +1,20 @@
+import type { Metadata } from "next";
+import MyBorrowsList from "@/components/books/MyBorrowsList";
 import { requireUser } from "@/lib/require-user";
-import AccountPageFrame from "@/components/ui/AccountPageFrame";
+
+export const metadata: Metadata = { title: "BookNook | My Borrows" };
 
 export default async function MyBorrowsPage() {
   const user = await requireUser("/my-borrows");
-  return <AccountPageFrame eyebrow="Your current reads" title="My borrows" description="Keep track of the stories you have borrowed and the books ready to return." userName={user.name} />;
+
+  return (
+    <main className="min-h-[calc(100vh-76px)] bg-[#faf8f3] px-5 py-12 text-[#25251f] sm:px-8">
+      <section className="mx-auto max-w-7xl">
+        <p className="text-xs font-semibold uppercase tracking-[.2em] text-[#718768]">Your current reads</p>
+        <h1 className="mt-2 font-serif text-4xl tracking-tight sm:text-5xl">My Borrows</h1>
+        <p className="mt-4 mb-8 max-w-xl leading-7 text-[#68695f]">Keep track of the books you are reading and return them when you are done.</p>
+        <MyBorrowsList userEmail={user.email} />
+      </section>
+    </main>
+  );
 }

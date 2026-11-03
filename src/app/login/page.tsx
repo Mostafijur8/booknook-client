@@ -1,6 +1,9 @@
 import Link from "next/link";
 import { BookOpen } from "lucide-react";
 import LoginForm from "@/components/forms/LoginForm";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = { title: "BookNook | Login" };
 
 type LoginPageProps = {
   searchParams: Promise<Record<string, string | string[] | undefined>>;

@@ -1,5 +1,8 @@
 import { requireUser } from "@/lib/require-user";
 import AccountPageFrame from "@/components/ui/AccountPageFrame";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = { title: "BookNook | My Profile" };
 
 export default async function ProfilePage() {
   const user = await requireUser("/profile");

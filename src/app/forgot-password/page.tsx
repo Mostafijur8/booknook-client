@@ -1,6 +1,9 @@
 import { BookOpen } from "lucide-react";
 import Link from "next/link";
 import PasswordResetRequestForm from "@/components/forms/PasswordResetRequestForm";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = { title: "BookNook | Password Reset" };
 
 export default function ForgotPasswordPage() {
   return (

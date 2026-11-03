@@ -1,6 +1,9 @@
 import { BookOpen } from "lucide-react";
 import Link from "next/link";
 import ResetPasswordForm from "@/components/forms/ResetPasswordForm";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = { title: "BookNook | Choose a New Password" };
 
 type ResetPasswordPageProps = {
   searchParams: Promise<{ token?: string | string[] }>;

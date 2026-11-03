@@ -1,36 +1,38 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# BookNook
 
-## Getting Started
+BookNook is a small online library where readers can discover books, share their own copies, borrow from the community, and return books when they are finished.
 
-First, run the development server:
+**Live site:** Add the deployed client URL here after publishing the frontend.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Features
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- Browse the community bookshelf and filter books by category or search by title and author.
+- View book details, available copies, and the reader who shared each book.
+- Create an account with Better Auth or sign in with Google.
+- Add a book with an imgbb cover image, description, category, and copy count.
+- Manage your shared books, edit details, and remove listings with a confirmation dialog.
+- Borrow available books and manage returns from your personal borrow list.
+- Use the responsive layout on desktop, tablet, and mobile screens.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Tech Stack
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- Next.js App Router and React
+- TypeScript
+- Tailwind CSS v4
+- Better Auth with the MongoDB adapter and JWT plugin
+- Express/MongoDB API (configured separately)
+- imgbb for book cover uploads
 
-## Learn More
+## Local Setup
 
-To learn more about Next.js, take a look at the following resources:
+1. Install dependencies with `npm install`.
+2. Copy `.env.example` to `.env.local` and fill in the local values.
+3. Configure the API URL, Better Auth, MongoDB, Google OAuth (optional), and imgbb settings.
+4. Start the development server with `npm run dev`.
+5. Open `http://localhost:3000`.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+The client expects the API to provide the `/books` and `/borrows` routes described in the assignment. Authenticated API requests send a Better Auth JWT as a Bearer token. Configure the API to validate that token using the Better Auth JWKS endpoint and to allow the client origin through CORS.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Environment Variables
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+See `.env.example` for the required variable names. Do not commit `.env.local` or real secrets.
