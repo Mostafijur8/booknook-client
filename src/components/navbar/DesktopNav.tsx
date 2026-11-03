@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { ArrowUpRight } from "lucide-react";
 import type { NavLink, NavUser } from "./nav-data";
 import UserMenu from "./UserMenu";
@@ -11,14 +12,18 @@ type DesktopNavProps = {
 };
 
 export default function DesktopNav({ links, user, isPending, onLogout }: DesktopNavProps) {
+  const pathname = usePathname();
+
   return (
     <>
       <nav aria-label="Main navigation" className="hidden items-center gap-1 md:flex">
-        {links.map((link) => (
-          <Link key={link.href} href={link.href} className="rounded-full px-4 py-2.5 text-sm font-medium text-[#68695f] transition duration-200 hover:-translate-y-0.5 hover:bg-white hover:text-[#40583a] hover:shadow-sm">
+        {links.map((link) => {
+          const isActive = link.href === "/" ? pathname === "/" : pathname === link.href || pathname.startsWith(`${link.href}/`);
+
+          return <Link key={link.href} href={link.href} aria-current={isActive ? "page" : undefined} className={`rounded-full px-4 py-2.5 text-sm font-medium transition duration-200 hover:-translate-y-0.5 hover:bg-white hover:text-[#40583a] hover:shadow-sm ${isActive ? "bg-[#e4e9df] text-[#40583a] shadow-sm" : "text-[#68695f]"}`}>
             {link.label}
-          </Link>
-        ))}
+          </Link>;
+        })}
       </nav>
 
       <div className="hidden items-center gap-3 md:flex">

@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import { BookOpen, Camera, Mail, MapPin } from "lucide-react";
 
@@ -42,9 +44,22 @@ export default function Footer() {
         <div>
           <h2 className="text-sm font-semibold">Explore</h2>
           <ul className="mt-4 space-y-3 text-sm text-[#68695f]">
-            <li><Link className="transition hover:text-[#40583a]" href="/">Home</Link></li>
-            <li><Link className="transition hover:text-[#40583a]" href="/books">All Books</Link></li>
-            <li><Link className="transition hover:text-[#40583a]" href="/add-book">Share a Book</Link></li>
+            {[
+              { href: "/", label: "Home" },
+              { href: "/books", label: "All Books" },
+              { href: "/add-book", label: "Share a Book" },
+              { href: "/my-books", label: "My Books" },
+              { href: "/my-borrows", label: "My Borrows" },
+              { href: "/profile", label: "My Profile" },
+            ].map(({ href, label }) => {
+              return (
+                <li key={href}>
+                  <Link className="transition hover:text-[#40583a]" href={href}>
+                    {label}
+                  </Link>
+                </li>
+              );
+            })}
           </ul>
         </div>
 

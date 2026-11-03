@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { LogOut, Menu, X } from "lucide-react";
 import { UserAvatar } from "./UserMenu";
@@ -13,6 +14,7 @@ type MobileMenuProps = {
 
 export default function MobileMenu({ links, user, isPending, onLogout }: MobileMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const pathname = usePathname();
 
   return (
     <div className="md:hidden">
@@ -23,11 +25,13 @@ export default function MobileMenu({ links, user, isPending, onLogout }: MobileM
         <div className="fixed inset-0 z-[60] md:hidden">
           <button type="button" aria-label="Close navigation menu" onClick={() => setIsOpen(false)} className="absolute inset-0 size-full bg-[#25251f]/20" />
           <nav aria-label="Mobile navigation" className="booknook-menu-enter absolute right-5 top-[88px] z-10 w-[min(20rem,calc(100vw-2.5rem))] rounded-2xl border border-[#e8e6dd] bg-white p-3 shadow-xl shadow-[#25251f]/10 sm:right-6">
-            {links.map((link) => (
-              <Link key={link.href} href={link.href} onClick={() => setIsOpen(false)} className="block rounded-xl px-4 py-3 text-sm font-medium text-[#55564e] transition hover:bg-[#f3f4ef] hover:text-[#40583a]">
+            {links.map((link) => {
+              const isActive = link.href === "/" ? pathname === "/" : pathname === link.href || pathname.startsWith(`${link.href}/`);
+
+              return <Link key={link.href} href={link.href} aria-current={isActive ? "page" : undefined} onClick={() => setIsOpen(false)} className={`block rounded-xl px-4 py-3 text-sm font-medium transition hover:bg-[#f3f4ef] hover:text-[#40583a] ${isActive ? "bg-[#e4e9df] text-[#40583a]" : "text-[#55564e]"}`}>
                 {link.label}
-              </Link>
-            ))}
+              </Link>;
+            })}
             <div className="my-2 border-t border-[#eeeDE6]" />
             {user ? (
               <>
