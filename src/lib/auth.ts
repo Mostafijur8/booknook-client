@@ -17,7 +17,22 @@ if (!authSecret || authSecret.length < 32) {
   throw new Error("BETTER_AUTH_SECRET must be set and contain at least 32 characters.");
 }
 
-const baseURL = process.env.BETTER_AUTH_URL || "http://localhost:3000";
+const vercelHost =
+  process.env.VERCEL_PROJECT_PRODUCTION_URL || process.env.VERCEL_URL;
+const baseURL =
+  process.env.BETTER_AUTH_URL ||
+  (vercelHost ? `https://${vercelHost}` : "http://localhost:3000");
+const trustedOrigins = [
+  baseURL,
+  process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : undefined,
+  process.env.VERCEL_PROJECT_PRODUCTION_URL
+    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+    : undefined,
+  ...(process.env.BETTER_AUTH_TRUSTED_ORIGINS || "")
+    .split(",")
+    .map((origin) => origin.trim())
+    .filter(Boolean),
+].filter((origin): origin is string => Boolean(origin));
 const mongoDatabase = process.env.MONGODB_DATABASE;
 
 const globalForMongo = globalThis as typeof globalThis & {
@@ -46,7 +61,7 @@ export const auth = betterAuth({
   appName: "BookNook",
   baseURL,
   secret: authSecret,
-  trustedOrigins: [baseURL],
+  trustedOrigins: [...new Set(trustedOrigins)],
   account: {
     accountLinking: {
       enabled: true,

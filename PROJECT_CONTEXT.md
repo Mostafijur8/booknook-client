@@ -95,7 +95,8 @@ The source references these environment variable names (do not store values here
 
 - `NEXT_PUBLIC_API_URL`: Express API base URL.
 - `MONGODB_URI`, optional `MONGODB_DATABASE`: Better Auth persistence.
-- `BETTER_AUTH_SECRET`, optional `BETTER_AUTH_URL`: Better Auth server configuration.
+- `BETTER_AUTH_SECRET`, optional `BETTER_AUTH_URL`: Better Auth server configuration. Set `BETTER_AUTH_URL` to the canonical deployed app origin in Vercel; Vercel deployment origins are also added from system environment variables.
+- `BETTER_AUTH_TRUSTED_ORIGINS`: optional comma-separated list of additional exact origins for custom domains/previews.
 - `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`: enable Google OAuth when both are present.
 - `NEXT_PUBLIC_IMGBB_API_KEY`: client-side imgbb cover upload key.
 
