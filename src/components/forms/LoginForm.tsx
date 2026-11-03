@@ -11,11 +11,9 @@ import { authClient } from "@/lib/auth-client";
 export default function LoginForm({
   callbackUrl = "/",
   registered = false,
-  passwordReset = false,
 }: {
   callbackUrl?: string;
   registered?: boolean;
-  passwordReset?: boolean;
 }) {
   const router = useRouter();
   const [email, setEmail] = useState("");
@@ -57,12 +55,6 @@ export default function LoginForm({
           Account created. Please log in with your new account.
         </p>
       )}
-      {passwordReset && (
-        <p className="mb-5 rounded-xl bg-[#eef1e9] px-4 py-3 text-sm text-[#40583a]">
-          Password updated. Please log in with your new password.
-        </p>
-      )}
-
       <form onSubmit={handleSubmit} className="space-y-5">
         <div>
           <label htmlFor="email" className="mb-2 block text-sm font-medium">Email address</label>
@@ -85,9 +77,6 @@ export default function LoginForm({
         <div>
           <div className="mb-2 flex items-center justify-between gap-3">
             <label htmlFor="password" className="text-sm font-medium">Password</label>
-            <Link href="/forgot-password" className="text-sm font-medium text-[#526b4b] hover:underline">
-              Forgot password?
-            </Link>
           </div>
           <div className="flex items-center gap-3 rounded-xl border border-[#deddd3] bg-white px-4 transition focus-within:border-[#718768] focus-within:ring-4 focus-within:ring-[#718768]/10">
             <LockKeyhole className="size-5 shrink-0 text-[#929389]" aria-hidden="true" />

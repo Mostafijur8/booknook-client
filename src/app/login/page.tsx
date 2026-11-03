@@ -18,7 +18,6 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
     ? rawCallback
     : "/";
   const registered = query.registered === "1";
-  const passwordReset = query.passwordReset === "1";
 
   return (
     <main className="flex min-h-[calc(100vh-76px)] items-center justify-center bg-[#f7f6f1] px-5 py-12 text-[#25251f]">
@@ -40,7 +39,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
           <p className="text-sm font-semibold uppercase tracking-[.16em] text-[#718768]">Reader account</p>
           <h2 className="mt-2 font-serif text-4xl tracking-tight">Log in</h2>
           <p className="mt-3 mb-7 text-sm leading-6 text-[#73746b]">Welcome back to your BookNook.</p>
-          <LoginForm callbackUrl={callbackUrl} registered={registered} passwordReset={passwordReset} />
+          <LoginForm callbackUrl={callbackUrl} registered={registered} />
         </div>
       </section>
     </main>
