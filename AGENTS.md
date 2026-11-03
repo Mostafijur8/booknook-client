@@ -40,42 +40,40 @@ npm run build
 
 | URL | Source file | Current state |
 | --- | --- | --- |
-| `/` | `src/app/page.tsx` | BookNook landing page with hero, CSS book-card illustration, category links, CTA, and animations. |
-| `/books` | `src/app/books/page.tsx` | Placeholder; book listing and filtering are not wired up. |
-| `/books/[id]` | `src/app/books/[id]/page.tsx` | Placeholder detail page. |
-| `/login` | `src/app/login/page.tsx` | Placeholder; login form is not wired up. |
-| `/register` | `src/app/register/page.tsx` | Placeholder; registration form is not wired up. |
-| `/add-book` | `src/app/add-book/page.tsx` | Placeholder; add-book form is not wired up. |
-| `/my-books` | `src/app/my-books/page.tsx` | Placeholder. |
-| `/my-books/edit/[id]` | `src/app/my-books/edit/[id]/page.tsx` | Placeholder. |
-| `/my-borrows` | `src/app/my-borrows/page.tsx` | Placeholder. |
-| `/profile` | `src/app/profile/page.tsx` | Placeholder. |
+| `/` | `src/app/page.tsx` | Landing page with hero slider, new arrivals, how-it-works, categories, and reader reviews. |
+| `/books` | `src/app/books/page.tsx` | Loads books from the API and filters by category and title/author search. |
+| `/books/[id]` | `src/app/books/[id]/page.tsx` | Loads one book and shows authenticated borrow controls. |
+| `/login` | `src/app/login/page.tsx` | Email/password and Google sign-in. |
+| `/register` | `src/app/register/page.tsx` | Email/password and Google registration. |
+| `/add-book` | `src/app/add-book/page.tsx` | Authenticated book creation form. |
+| `/my-books` | `src/app/my-books/page.tsx` | Authenticated management of the current user's listings. |
+| `/my-books/edit/[id]` | `src/app/my-books/edit/[id]/page.tsx` | Authenticated edit page with an ownership check. |
+| `/my-borrows` | `src/app/my-borrows/page.tsx` | Authenticated borrow list and return action. |
+| `/profile` | `src/app/profile/page.tsx` | Authenticated profile editor. |
+| `/api/auth/[...all]` | `src/app/api/auth/[...all]/route.ts` | Better Auth GET/POST handler. |
 
 The root layout is `src/app/layout.tsx`; it sets Geist fonts and BookNook metadata.
 
 ## Source Structure
 
-- `src/app/`: App Router pages and global CSS.
-- `src/components/home/`: Named home component files; currently empty. The home UI is written directly in `src/app/page.tsx`.
-- `src/components/books/`: Intended book list/detail/filter/borrow components; currently empty.
-- `src/components/forms/`: Intended add/update/login/register forms; currently empty.
-- `src/components/navbar/` and `src/components/footer/`: Files exist but are currently empty.
-- `src/components/ui/`: `Loading.tsx` and `Button.tsx` are implemented; `Modal.tsx` and `EmptyState.tsx` are empty. shadcn init also created lowercase `button.tsx`.
-- `src/hooks/`: `useBooks.ts` and `useAuth.ts` are currently empty.
-- `src/lib/api.ts`: JSON API helper using `NEXT_PUBLIC_API_URL`.
-- `src/lib/auth.ts` and `src/lib/auth-client.ts`: Currently empty.
-- `src/providers/Providers.tsx`: Placeholder markup; no providers are configured yet.
+- `src/app/`: App Router pages, auth route, global CSS, loading, and not-found UI.
+- `src/components/home/`: Hero slider, new arrivals, categories, reviews, and other landing-page sections.
+- `src/components/books/`: Book detail, borrow modal, personal book manager, and borrow list.
+- `src/components/forms/`: Login/register, Google auth, add/update book, and profile forms.
+- `src/components/navbar/` and `src/components/footer/`: Shared navigation, account menu, and footer.
+- `src/components/ui/`: Shared button, loading, toast, and account frame components.
+- `src/lib/`: API helpers, Better Auth server/client configuration, image processing, and session guard.
 - `src/types/`: Book, Borrow, and User types.
 
 ## Data Model and API
 
 `src/types/book.ts` defines `Book` with `_id`, `title`, `author`, `category`, `image`, `description`, `addedBy`, `totalCopies`, `createdAt`, and optional `updatedAt`.
 
-The current `BookCategory` union is `Fiction | Science | History | Kids | Others`. The homepage links also include `Mystery`, `Fantasy`, `Romance`, and `Self-growth`; reconcile these with the backend/API contract before implementing filters.
+The current `BookCategory` union and the homepage links use `Fiction | Science | History | Kids | Others`. Keep these aligned with the backend validation.
 
 `src/types/borrow.ts` defines `Borrow` with `_id`, `bookId`, `bookTitle`, `bookImage`, `userEmail`, `borrowDate`, and `returnDate`. `src/types/user.ts` defines `User` with `id`, `name`, `email`, and optional `image`.
 
-`apiRequest<T>(path, options)` in `src/lib/api.ts` requires `NEXT_PUBLIC_API_URL`, sets JSON content type, and throws with the response text for non-2xx responses.
+`apiRequest<T>(path, options)` in `src/lib/api.ts` uses the local or deployed Express API URL, sets JSON content type, and throws on non-2xx responses.
 
 ## UI and Animation
 
@@ -86,8 +84,5 @@ The current `BookCategory` union is `Fiction | Science | History | Kids | Others
 
 ## Current Caveats
 
-1. Most named component, form, and hook files are empty. Check implementation before importing them.
-2. Homepage category names and the `BookCategory` union do not currently match. Confirm the backend's canonical values.
-3. `src/components/ui/Button.tsx` and shadcn's `src/components/ui/button.tsx` differ only by filename case. Windows filesystems are usually case-insensitive; use consistent imports and consider consolidating to one canonical component.
-4. `src/providers/Providers.tsx` does not yet configure real providers.
-5. Homepage book artwork is made from CSS color blocks; it does not load book cover images from the API.
+- Homepage book artwork is made from CSS color blocks; it does not load book cover images from the API.
+- The API must be running and connected to the same MongoDB database as Better Auth for the full borrow flow to work.

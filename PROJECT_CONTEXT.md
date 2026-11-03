@@ -42,13 +42,12 @@ This document is a working map of the client repository, based on the source rev
 - `src/components/navbar/`: `Navbar.tsx` owns session-aware public/private links and logout; `DesktopNav.tsx` and `MobileMenu.tsx` render them; `nav-data.ts` defines routes; `Brand.tsx` and `UserMenu.tsx` handle logo/account menu.
 - `src/components/footer/Footer.tsx`: shared footer content and Explore links. Active route treatment belongs in the navbar; footer Explore links use hover color.
 - `src/components/home/`: homepage sections. `NewArrivals.tsx` gets recent API books; `HeroSlider.tsx` uses Swiper; `Categories.tsx` links to `/books?category=...`; other sections are presentational.
-- `src/components/books/`: book detail, borrow modal, book cards, listing/filter components, personal books manager, and borrow list.
-- `src/components/forms/`: login/register, Google auth, add/update book, and profile forms.
-- `src/components/ui/`: shared button, toast, loading, modal, empty state, and account frame components. Verify each component before reusing; some may be unused or minimal.
+- `src/components/books/`: book detail, borrow modal, personal books manager, and borrow list. Listing cards are implemented in `src/components/home/BookCard.tsx` and the books page.
+- `src/components/forms/`: login/register, Google auth, add/update book, and profile forms. The add-book form orchestrates smaller `add-book/BookFields`, `BookCoverField`, and `ContributorFields` components. Shared form classes live in `form-styles.ts`. Add/update forms use `src/lib/image.ts` to resize and compress uploaded covers into small JPEG data URLs; direct image URLs remain supported when adding books.
+- `src/components/ui/`: shared button, toast, loading, and account frame components.
 - `src/lib/`: API helpers, Better Auth server/client configuration, `requireUser`, and class utility.
-- `src/hooks/`: `useBooks.ts` and `useAuth.ts` exist; inspect contents before use (not relied on by the reviewed flows).
+- `src/hooks/`: no custom hooks are currently needed by the implemented flows.
 - `src/types/`: book, borrow, and user interfaces.
-- `src/providers/Providers.tsx`: currently placeholder markup and is not wired into the root layout.
 - `public/`: standard Next starter SVG assets; check actual use before replacing/removing.
 
 ## Data and API
@@ -98,9 +97,9 @@ The source references these environment variable names (do not store values here
 - `BETTER_AUTH_SECRET`, optional `BETTER_AUTH_URL`: Better Auth server configuration. Set `BETTER_AUTH_URL` to the canonical deployed app origin in Vercel; Vercel deployment origins are also added from system environment variables.
 - `BETTER_AUTH_TRUSTED_ORIGINS`: optional comma-separated list of additional exact origins for custom domains/previews.
 - `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`: enable Google OAuth when both are present.
-- `NEXT_PUBLIC_IMGBB_API_KEY`: client-side imgbb cover upload key.
+- No external image API key is needed. Uploaded covers are compressed in the browser and stored as data URLs in the API's `image` string field.
 
-`README.md` refers to `.env.example`, but it was not present in the reviewed tracked-file listing; verify before relying on it. Never print or copy `.env` contents into documentation.
+`README.md` documents the client `.env` variables and the separate backend `.env` setup. Never print or copy `.env` contents into documentation.
 
 ## Commands
 
@@ -118,6 +117,5 @@ Run lint/build/tests only when the user requests verification. There is no test 
 - The repo's `AGENTS.md` includes Next.js version-specific documentation instructions; obey these on each relevant change.
 - Better Auth middleware/proxy only checks for a session cookie; server-side pages also call `requireUser`.
 - Category names are a shared frontend/backend contract; keep forms, filters, home links, and API values synchronized.
-- `Providers.tsx` is placeholder code; it is not a configured provider stack.
 - `src/components/ui/Button.tsx` exists alongside shadcn's lowercase `src/components/ui/button.tsx`; Windows path casing can cause conflicts. Inspect the exact import convention before adding another button component.
 - `README.md` is a general setup/features overview; this context file captures source behavior and should be updated when architecture changes.
