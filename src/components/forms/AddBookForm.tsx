@@ -29,6 +29,7 @@ export default function AddBookForm({ userName, userEmail }: AddBookFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [imageUrl, setImageUrl] = useState("");
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -38,44 +39,49 @@ export default function AddBookForm({ userName, userEmail }: AddBookFormProps) {
     const form = event.currentTarget;
     const formData = new FormData(form);
     const imageFile = formData.get("image");
+    const uploadFile = imageFile instanceof File && imageFile.size > 0 ? imageFile : null;
+    const submittedImageUrl = String(formData.get("imageUrl") ?? "").trim();
 
-    if (!(imageFile instanceof File) || imageFile.size === 0) {
-      setError("Please choose a book cover image.");
+    if (!uploadFile && !submittedImageUrl) {
+      setError("Upload a book cover or paste an image URL.");
       return;
     }
 
-    const imgbbKey = process.env.NEXT_PUBLIC_IMGBB_API_KEY;
-    if (!imgbbKey) {
-      setError(
-        "Image upload is not configured. Please contact the site admin.",
-      );
-      return;
+    if (!uploadFile) {
+      try {
+        const parsedImageUrl = new URL(submittedImageUrl);
+        if (parsedImageUrl.protocol !== "http:" && parsedImageUrl.protocol !== "https:") {
+          throw new Error("Unsupported image URL protocol.");
+        }
+      } catch {
+        setError("Enter a valid image URL beginning with http:// or https://.");
+        return;
+      }
     }
 
     setIsSubmitting(true);
 
     try {
-      const uploadData = new FormData();
-      uploadData.set("image", imageFile);
+      let image = submittedImageUrl;
+      if (uploadFile) {
+        const imgbbKey = process.env.NEXT_PUBLIC_IMGBB_API_KEY;
+        if (!imgbbKey) {
+          throw new Error("Image upload is not configured. Please contact the site admin.");
+        }
 
-      const uploadResponse = await fetch(
-        `https://api.imgbb.com/1/upload?key=${encodeURIComponent(imgbbKey)}`,
-        {
-          method: "POST",
-          body: uploadData,
-        },
-      );
-
-      const uploadResult = (await uploadResponse.json()) as ImgbbResponse;
-
-      if (
-        !uploadResponse.ok ||
-        !uploadResult.success ||
-        !uploadResult.data?.url
-      ) {
-        throw new Error(
-          uploadResult.error?.message || "Could not upload the book cover.",
+        const uploadData = new FormData();
+        uploadData.set("image", uploadFile);
+        const uploadResponse = await fetch(
+          `https://api.imgbb.com/1/upload?key=${encodeURIComponent(imgbbKey)}`,
+          { method: "POST", body: uploadData },
         );
+
+        const uploadResult = (await uploadResponse.json()) as ImgbbResponse;
+
+        if (!uploadResponse.ok || !uploadResult.success || !uploadResult.data?.url) {
+          throw new Error(uploadResult.error?.message || "Could not upload the book cover.");
+        }
+        image = uploadResult.data.url;
       }
 
       await apiRequestWithAuth("/books", {
@@ -84,7 +90,7 @@ export default function AddBookForm({ userName, userEmail }: AddBookFormProps) {
           title: String(formData.get("title")).trim(),
           author: String(formData.get("author")).trim(),
           category: String(formData.get("category")),
-          image: uploadResult.data.url,
+          image,
           description: String(formData.get("description")).trim(),
           addedBy: {
             name: userName,
@@ -99,6 +105,7 @@ export default function AddBookForm({ userName, userEmail }: AddBookFormProps) {
       if (fileInputRef.current) {
         fileInputRef.current.value = "";
       }
+      setImageUrl("");
 
       setSuccess("Book added successfully!");
       router.refresh();
@@ -185,13 +192,36 @@ export default function AddBookForm({ userName, userEmail }: AddBookFormProps) {
           name="image"
           type="file"
           accept="image/*"
-          required
+          onChange={(event) => {
+            if (event.target.files?.length) setImageUrl("");
+          }}
           className={`${inputClassName} file:mr-4 file:rounded-full file:border-0 file:bg-[#eef1e9] file:px-4 file:py-2 file:text-sm file:font-semibold file:text-[#40583a]`}
         />
-        <span className="mt-1 block text-xs font-normal text-[#858579]">
-          Choose a book cover image. It will be uploaded to imgbb.
-        </span>
+        <span className="mt-1 block text-xs font-normal text-[#858579]">Upload a cover to imgbb, or paste a direct image URL below.</span>
       </label>
+
+      <label className="block text-sm font-semibold">
+        Or paste Book Image URL
+        <input
+          name="imageUrl"
+          type="url"
+          value={imageUrl}
+          onChange={(event) => {
+            setImageUrl(event.target.value);
+            if (event.target.value && fileInputRef.current) fileInputRef.current.value = "";
+          }}
+          placeholder="https://example.com/book-cover.jpg"
+          className={inputClassName}
+        />
+      </label>
+
+      {imageUrl && (
+        <div className="flex items-center gap-3 rounded-2xl bg-[#f7f6f1] p-3">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={imageUrl} alt="Book cover preview" className="size-16 rounded-lg object-cover" />
+          <p className="text-sm text-[#68695f]">Book cover preview</p>
+        </div>
+      )}
 
       <label className="block text-sm font-semibold">
         Short Description
@@ -233,7 +263,7 @@ export default function AddBookForm({ userName, userEmail }: AddBookFormProps) {
         disabled={isSubmitting}
         className="inline-flex w-full items-center justify-center rounded-full bg-[#526b4b] px-6 py-3.5 text-sm font-semibold text-white transition hover:bg-[#40583a] disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
       >
-        {isSubmitting ? "Uploading and adding..." : "Add Book"}
+        {isSubmitting ? "Saving book..." : "Add Book"}
       </button>
     </form>
   );

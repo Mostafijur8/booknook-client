@@ -34,7 +34,7 @@ export default function RegisterForm() {
         email,
         password,
         image: image.trim() || undefined,
-        callbackURL: "/login?registered=1",
+        callbackURL: "/",
       });
 
       if (result.error) {
@@ -42,7 +42,8 @@ export default function RegisterForm() {
         return;
       }
 
-      router.replace("/login?registered=1");
+      router.replace("/");
+      router.refresh();
     } catch {
       setError("Could not create your account. Please try again.");
     } finally {
