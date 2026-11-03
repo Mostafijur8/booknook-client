@@ -17,11 +17,10 @@ if (!authSecret || authSecret.length < 32) {
   throw new Error("BETTER_AUTH_SECRET must be set and contain at least 32 characters.");
 }
 
-const vercelHost =
-  process.env.VERCEL_PROJECT_PRODUCTION_URL || process.env.VERCEL_URL;
 const baseURL =
-  process.env.BETTER_AUTH_URL ||
-  (vercelHost ? `https://${vercelHost}` : "http://localhost:3000");
+  process.env.VERCEL
+    ? "https://booknook-tawny.vercel.app"
+    : process.env.BETTER_AUTH_URL || "http://localhost:3000";
 const trustedOrigins = [
   baseURL,
   process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : undefined,
