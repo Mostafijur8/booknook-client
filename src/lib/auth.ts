@@ -47,6 +47,15 @@ export const auth = betterAuth({
   baseURL,
   secret: authSecret,
   trustedOrigins: [baseURL],
+  account: {
+    accountLinking: {
+      enabled: true,
+      // Email/password users are not email-verified in this assignment.
+      // Google must still return a verified matching email for automatic linking.
+      requireLocalEmailVerified: false,
+      disableImplicitLinking: false,
+    },
+  },
   database: mongodbAdapter(database, {
     client: mongoClient,
     // The local example MongoDB server is standalone and does not support transactions.

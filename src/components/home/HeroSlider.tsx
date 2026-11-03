@@ -34,7 +34,7 @@ export default function HeroSlider() {
     <section className="mx-auto max-w-7xl px-4 pt-5 sm:px-6 lg:px-10 lg:pt-8" aria-label="Featured books">
       <Swiper
         modules={[Autoplay, Pagination]}
-        autoplay={{ delay: 2000, disableOnInteraction: false, pauseOnMouseEnter: true }}
+        autoplay={{ delay: 3000, disableOnInteraction: false, pauseOnMouseEnter: false }}
         pagination={{ clickable: true }}
         loop
         className="booknook-hero-swiper overflow-hidden rounded-[2rem]"
